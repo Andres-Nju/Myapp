@@ -1,0 +1,17 @@
+[package]
+name = "webhook"
+version = "0.1.0"
+edition = "2021"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+warp = "0.3.5"
+serde_json = "1.0.105"
+openssl = "0.10.57"
+jwt = "0.16.0"
+chrono = "0.4.26"
+octocrab = "0.29.3"
+dotenvy = "0.15.7"
+jsonwebtoken = "8.3.0"
+tokio = { version = "1.28.1", features = ["full"] }
