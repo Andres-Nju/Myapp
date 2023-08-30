@@ -25,27 +25,31 @@ async fn main() {
         .expect("Failed to create Octocrab instance");
 
     // Warp filter for event handling
-    let event_handler = 
-        warp::post()
+    let event_handler = warp::path!("P4ULefIpD7wLKY0V")
+        .and(warp::post())
         .and(warp::header::<String>("X-Hub-Signature-256"))
         .and(warp::body::json())
         .map(move |signature: String, payload: Value| {
-            println!("{:?}", payload);
             // Verify the signature
-            // let our_signature = format!("sha256={}", payload);
-            // if !openssl::memcmp::eq(our_signature.as_bytes(), signature.as_bytes()) {
-            //     return warp::http::StatusCode::UNAUTHORIZED;
-            // }
+            let our_signature = format!("sha256={}", payload);
+            if !openssl::memcmp::eq(our_signature.as_bytes(), signature.as_bytes()) {
+                return warp::http::StatusCode::UNAUTHORIZED;
+            }
 
+            
             // Handle events and perform actions
             // ... Your code here ...
-            
+            let file_path = "testtt.txt";
+            match fs::write(file_path, signature.clone().as_bytes()) {
+                Ok(_) => println!("成功写入文件."),
+                Err(e) => eprintln!("写入文件时发生错误: {}", e),
+            }
 
 
             warp::http::StatusCode::OK
         });
 
     warp::serve(event_handler)
-        .run(([127, 0, 0, 1], 3000))
+        .run(([0, 0, 0, 0], 3000))
         .await;
 }
